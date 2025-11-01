@@ -2,7 +2,7 @@ import Input from '@/components/Input.jsx';
 
 export default function NewProject() {
   return (
-    <div className='rounded-md w-140 mt-10  bg-stone-50 '>
+    <div className='rounded-md w-140 mt-10  bg-stone-100'>
       <menu className='flex justify-end items-center gap-4 my-4 px-2'>
         <li>
           <button className='text-stone-800 hover:text-stone-950 cursor-pointer'>
