@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ProjectSideBar from '@/components/ProjectSideBar.jsx';
 import NoProjectSelected from '@/components/NoProjectSelected.jsx';
 import NewProject from '@/components/NewProject.jsx';
+import SelectProject from '@/components/SelectProject.jsx';
 
 export default function App() {
   // Хук управления текущим проектом и массивом всех проектов.
@@ -10,7 +11,30 @@ export default function App() {
     selectedProjectID: undefined,
     // Массив всех существующих проектов.
     projects: [],
+    tasks: [],
   });
+
+  function handleAddTask(text) {
+    setProjectState((prevState) => {
+      const taskID = {
+        text: text,
+        projectID: prevState.selectedProjectID,
+        id: Math.random(),
+      };
+      return {
+        ...prevState,
+        tasks: [...prevState.tasks, taskID],
+      };
+    });
+  }
+  function handleDeleteTask(id) {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        tasks: prevState.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
 
   // Перевод состояния проекта в Новый проект(null).
   function handleStartProject() {
@@ -35,6 +59,19 @@ export default function App() {
       };
     });
   }
+  // Удаление Проекста из массива.
+  function handleDeleteProject() {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectID: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectID
+        ),
+      };
+    });
+  }
+
   // Перевод состояния проекта в Не выбран(undefined).
   function handleCancelAddProject() {
     setProjectState((prevState) => {
@@ -44,8 +81,29 @@ export default function App() {
       };
     });
   }
+  // Выбор определенного проекта из массива по ID.
+  function hadnleSelectProject(id) {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectID: id,
+      };
+    });
+  }
 
-  let content;
+  const selectedProject = projectState.projects.find(
+    (project) => project.id === projectState.selectedProjectID
+  );
+
+  let content = (
+    <SelectProject
+      project={selectedProject}
+      onDelete={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      tasks={projectState.tasks}
+    />
+  );
   if (projectState.selectedProjectID === undefined)
     content = <NoProjectSelected onStartAddProject={handleStartProject} />;
   else if (projectState.selectedProjectID === null)
@@ -58,6 +116,8 @@ export default function App() {
       <ProjectSideBar
         onStartAddProject={handleStartProject}
         projects={projectState.projects}
+        onSelectProject={hadnleSelectProject}
+        selectedProjectID={projectState.selectedProjectID}
       />
       {content}
     </main>
