@@ -1,13 +1,36 @@
+import { useState } from 'react';
 import ProjectSideBar from '@/components/ProjectSideBar.jsx';
-import NewProject from '@/components/NewProject.jsx';
 import NoProjectSelected from '@/components/NoProjectSelected.jsx';
+import NewProject from '@/components/NewProject.jsx';
 
 export default function App() {
+  // Хук управления текущим проектом и массивом всех проектов.
+  const [projectState, setProjectState] = useState({
+    // Текущий проект(Не выбран(undefined)/Новый проект(null)/Существующий проект(id))
+    selectedProjectID: undefined,
+    // Массив всех существующих проектов.
+    projects: [],
+  });
+
+  // Перевод состояния проекта в Новый проект(null) или Создание проекта.
+  function handleStartProject() {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectID: null,
+      };
+    });
+  }
+
+  let content;
+  if (projectState.selectedProjectID === undefined)
+    content = <NoProjectSelected onStartAddProject={handleStartProject} />;
+  else if (projectState.selectedProjectID === null) content = <NewProject />;
+
   return (
     <main className='h-screen flex gap-8 my-8'>
-      <ProjectSideBar />
-      {/* <NewProject /> */}
-      <NoProjectSelected />
+      <ProjectSideBar onStartAddProject={handleStartProject} />
+      {content}
     </main>
   );
 }
