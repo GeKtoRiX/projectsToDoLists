@@ -12,7 +12,7 @@ export default function App() {
     projects: [],
   });
 
-  // Перевод состояния проекта в Новый проект(null) или Создание проекта.
+  // Перевод состояния проекта в Новый проект(null).
   function handleStartProject() {
     setProjectState((prevState) => {
       return {
@@ -21,7 +21,7 @@ export default function App() {
       };
     });
   }
-
+  // Добавление Проекта в массив.
   function handleAddProject(projectData) {
     setProjectState((prevState) => {
       const newProject = {
@@ -35,19 +35,30 @@ export default function App() {
       };
     });
   }
-
-  console.log(projectState.projects.length);
-  console.log(projectState.projects);
+  // Перевод состояния проекта в Не выбран(undefined).
+  function handleCancelAddProject() {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectID: undefined,
+      };
+    });
+  }
 
   let content;
   if (projectState.selectedProjectID === undefined)
     content = <NoProjectSelected onStartAddProject={handleStartProject} />;
   else if (projectState.selectedProjectID === null)
-    content = <NewProject onAdd={handleAddProject} />;
+    content = (
+      <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject} />
+    );
 
   return (
     <main className='h-screen flex gap-8 my-8'>
-      <ProjectSideBar onStartAddProject={handleStartProject} />
+      <ProjectSideBar
+        onStartAddProject={handleStartProject}
+        projects={projectState.projects}
+      />
       {content}
     </main>
   );
