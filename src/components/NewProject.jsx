@@ -40,7 +40,7 @@ export default function NewProject({ onAdd, onCancel }) {
           Plase make sure you provide a valid value for every input fielnd.
         </p>
       </Modal>
-      <div className='rounded-md w-140 mt-10  bg-stone-100'>
+      <div className='rounded-md w-140  bg-stone-100'>
         <menu className='flex justify-end items-center gap-4 my-4 px-2'>
           <li>
             <button
@@ -60,9 +60,9 @@ export default function NewProject({ onAdd, onCancel }) {
           </li>
         </menu>
         <div className='flex flex-col gap-4 justify-center p-2'>
-          <Input type='text' ref={titleRef} label={'title'} />
+          <Input ref={titleRef} type='text' label={'title'} />
           <Input ref={descriptionRef} label={'Description'} textArea />
-          <Input type='date' ref={dueDateRef} label={'Due Date'} />
+          <Input ref={dueDateRef} type='date' label={'Due Date'} />
         </div>
       </div>
     </>

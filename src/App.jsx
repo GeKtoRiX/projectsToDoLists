@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import ProjectSideBar from '@/components/ProjectSideBar.jsx';
 import NoProjectSelected from '@/components/NoProjectSelected.jsx';
 import NewProject from '@/components/NewProject.jsx';
@@ -7,35 +8,23 @@ import SelectProject from '@/components/SelectProject.jsx';
 export default function App() {
   // Хук управления текущим проектом и массивом всех проектов.
   const [projectState, setProjectState] = useState({
-    // Текущий проект(Не выбран(undefined)/Новый проект(null)/Существующий проект(id))
+    // Текущий проект(Не выбран(undefined)/Новый проект(null)/Существующий проект(id)).
     selectedProjectID: undefined,
     // Массив всех существующих проектов.
     projects: [],
+    // Массив заданий ко всем существующим проектам.
     tasks: [],
   });
 
-  function handleAddTask(text) {
-    setProjectState((prevState) => {
-      const taskID = {
-        text: text,
-        projectID: prevState.selectedProjectID,
-        id: Math.random(),
-      };
-      return {
-        ...prevState,
-        tasks: [...prevState.tasks, taskID],
-      };
-    });
-  }
-  function handleDeleteTask(id) {
+  // Перевод состояния проекта в Не выбран(undefined).
+  function handleCancelAddProject() {
     setProjectState((prevState) => {
       return {
         ...prevState,
-        tasks: prevState.tasks.filter((task) => task.id !== id),
+        selectedProjectID: undefined,
       };
     });
   }
-
   // Перевод состояния проекта в Новый проект(null).
   function handleStartProject() {
     setProjectState((prevState) => {
@@ -45,6 +34,7 @@ export default function App() {
       };
     });
   }
+
   // Добавление Проекта в массив.
   function handleAddProject(projectData) {
     setProjectState((prevState) => {
@@ -59,7 +49,16 @@ export default function App() {
       };
     });
   }
-  // Удаление Проекста из массива.
+  // Выбор определенного проекта из массива по ID.
+  function hadnleSelectProject(id) {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectID: id,
+      };
+    });
+  }
+  // Удаление Проекта из массива.
   function handleDeleteProject() {
     setProjectState((prevState) => {
       return {
@@ -72,29 +71,36 @@ export default function App() {
     });
   }
 
-  // Перевод состояния проекта в Не выбран(undefined).
-  function handleCancelAddProject() {
+  // Добавление задания в проекте.
+  function handleAddTask(text) {
     setProjectState((prevState) => {
+      const taskID = {
+        text: text,
+        projectID: prevState.selectedProjectID,
+        id: Math.random(),
+      };
       return {
         ...prevState,
-        selectedProjectID: undefined,
+        tasks: [...prevState.tasks, taskID],
       };
     });
   }
-  // Выбор определенного проекта из массива по ID.
-  function hadnleSelectProject(id) {
+  // Удаление задания в проекте.
+  function handleDeleteTask(id) {
     setProjectState((prevState) => {
       return {
         ...prevState,
-        selectedProjectID: id,
+        tasks: prevState.tasks.filter((task) => task.id !== id),
       };
     });
   }
 
+  // Получение текущего проекта по ID projectState.
   const selectedProject = projectState.projects.find(
     (project) => project.id === projectState.selectedProjectID
   );
 
+  // Рендер определенного проекта.
   let content = (
     <SelectProject
       project={selectedProject}
@@ -104,6 +110,7 @@ export default function App() {
       tasks={projectState.tasks}
     />
   );
+
   if (projectState.selectedProjectID === undefined)
     content = <NoProjectSelected onStartAddProject={handleStartProject} />;
   else if (projectState.selectedProjectID === null)

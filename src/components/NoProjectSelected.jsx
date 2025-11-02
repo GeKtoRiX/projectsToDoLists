@@ -3,7 +3,7 @@ import Button from './Button';
 
 export default function NoProjectSelected({ onStartAddProject }) {
   return (
-    <div className='rounded-md w-2/3 mt-24 text-center bg-stone-100'>
+    <div className='rounded-md w-2/3 p-24  text-center bg-stone-100'>
       <img
         className='w-16 h-16 mx-auto object-contain'
         src={noProjectSelectedImage}
